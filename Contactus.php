@@ -1,14 +1,48 @@
 <?php
 if ($_SERVER['REQUEST_METHOD']=='POST'){
+    $name = $_POST['name'];
     $email = $_POST['email'];
-    $pass = $_POST['pass']; 
+    $desc = $_POST['desc'];
 
-    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Congrats!</strong> Your email ' . $email . ' and password ' . $pass . 'is registered.
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>';
+
+
+    //connecting to database
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $database = "contacts";
+
+    $conn = mysqli_connect($servername, $username, $password, $database);
+    if(!$conn){
+      die("Error : ". mysqli_connect_error());
+    }else{
+      // echo "Connected";
+    }
+
+
+    //executing sql query
+
+    $sql = "INSERT INTO `contactus` (`sno`, `name`, `email`, `concern`, `dt`) VALUES (NULL, '$name', '$email', '$desc', current_timestamp())";
+    $result = mysqli_query($conn, $sql);
+
+    if($result){
+      echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Congrats!</strong> Your are registered.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>';
+    } else {
+      echo "insertion failed ---> " . mysqli_error($conn);
+    }
 
 }
+
+
+
+
+
+
+
 
 ?>
 
@@ -22,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST'){
   <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">GET / POST</a>
+    <a class="navbar-brand" href="#">Contact Us</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -60,16 +94,24 @@ if ($_SERVER['REQUEST_METHOD']=='POST'){
 <div class="container">
 <h1>Please Enter your email and password</h1>
 
-<form action="/php/21_GET_POST.php" method="POST">
+<form action="/php-pratice/Contactus.php" method="POST">
+
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" name="name" class="form-control" id="name" aria-describedby="emailHelp">
+  </div>
+
   <div class="mb-3">
     <label for="email" class="form-label">Email address</label>
     <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
   </div>
+
   <div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" class="form-control" id="pass" name="pass">
+    <label for="desc" class="form-label">Description</label>
+    <textarea class="form-control" name="desc" id="desc" cols="30" rows="10"></textarea>
   </div>
+
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
